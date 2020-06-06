@@ -9,12 +9,12 @@ NAME = ""
 def OpenFile():
     global NAME
     NAME = fd.askopenfilename()
-    try:
-        process = subprocess.check_output(["xxd", "-g1", str(NAME)], stderr = subprocess.PIPE)
+    process = subprocess.run(["xxd", "-g1", str(NAME)], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+    if process.returncode:
+        messagebox.showerror("Error", process.stderr)
+    else:
         text.delete(1.0, tkinter.END)
-        text.insert(1.0, process)
-    except Exception as er:
-        messagebox.showerror("Error", er)
+        text.insert(1.0, process.stdout)
 
 def SaveFile(name):
     try:
@@ -22,11 +22,12 @@ def SaveFile(name):
         f = open("tmp", "w")
         f.write(fileForWrite)
         f.close()
-        process = subprocess.check_output(["xxd", "-r", "tmp"])
+        process = subprocess.run(["xxd", "-r", "tmp"], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
         file_2 = open(name, 'wb')
-        file_2.write(process)
-    except Exception as er:
-        messagebox.showerror("Error", er)
+        file_2.write(process.stdout)
+    except Exception as err:
+        messagebox.showerror("Error", err)
+
 
 def SaveAsFile():
     SaveFile(fd.asksaveasfilename())
