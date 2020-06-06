@@ -2,6 +2,7 @@ import tkinter
 import os, subprocess
 from tkinter import messagebox
 from tkinter import filedialog as fd
+from tkinter.scrolledtext import ScrolledText
 
 NAME = ""
 
@@ -45,23 +46,18 @@ mainWindow.rowconfigure(1, weight = 1)
 mainWindow.rowconfigure(5, weight = 1)
 
 openBtn = tkinter.Button(mainWindow, text = 'Open file', font = 'Arial 24', bd = 5)
-openBtn.grid(row = 1, column = 0)
+openBtn.grid(row = 1, column = 1)
 openBtn.bind('<Button>', lambda event: OpenFile())
 
 saveBtn = tkinter.Button(mainWindow, text = 'Save', font = 'Arial 24', bd = 5)
-saveBtn.grid(row = 1, column = 1)
+saveBtn.grid(row = 1, column = 2)
 saveBtn.bind('<Button>', lambda event: SaveFile(NAME))
 
 saveAsBtn = tkinter.Button(mainWindow, text = 'Save As', font = 'Arial 24', bd = 5)
-saveAsBtn.grid(row = 1, column = 2)
+saveAsBtn.grid(row = 1, column = 3)
 saveAsBtn.bind('<Button>', lambda event: SaveAsFile())
 
-text = tkinter.Text(bg='#FFFFE0')
-yScroll = tkinter.Scrollbar(command = text.yview)
-xScroll = tkinter.Scrollbar(orient = tkinter.HORIZONTAL, command = text.xview)
-text.configure(yscrollcommand = yScroll.set, xscrollcommand = xScroll.set)
-text.grid(row = 2, column = 0, columnspan = 3, rowspan = 3)
+text = ScrolledText(bg='#FFFFE0')
+text.grid(row = 2, column = 0, columnspan = 4, rowspan = 3)
 
-yScroll.grid(row = 3, column = 3)
-xScroll.grid(row = 5, column = 1)
 mainWindow.mainloop()
