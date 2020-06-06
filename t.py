@@ -15,13 +15,16 @@ def OpenFile():
         messagebox.showinfo("INFORMATION", "Something strange")
 
 def SaveFile(name):
-    fileForWrite = text.get(1.0, tkinter.END)
-    f = open("tmp", "w")
-    f.write(fileForWrite)
-    f.close()
-    process = subprocess.check_output(["xxd", "-r", "tmp"])
-    file_2 = open(name, 'wb')
-    file_2.write(process)
+    try:
+        fileForWrite = text.get(1.0, tkinter.END)
+        f = open("tmp", "w")
+        f.write(fileForWrite)
+        f.close()
+        process = subprocess.check_output(["xxd", "-r", "tmp"])
+        file_2 = open(name, 'wb')
+        file_2.write(process)
+    except:
+        messagebox.showerror("ERROR", "Something strange")
 
 def SaveAsFile():
     SaveFile(fileName.get())
@@ -63,16 +66,8 @@ yScroll = tkinter.Scrollbar(mainWindow, command = text.yview)
 xScroll = tkinter.Scrollbar(orient = tkinter.HORIZONTAL, command = text.xview)
 text.configure(yscrollcommand = yScroll.set, xscrollcommand = xScroll.set)
 text.grid(row = 2, column = 1, columnspan = 2)
-yScroll.grid(row = 2, column = 3)
-xScroll.grid(row = 2, column = 3)
 
-#btnFrame.pack()
-#fileName.pack(side = tkinter.LEFT)
-#openBtn.pack(side = tkinter.LEFT)
-#saveBtn.pack(side = tkinter.LEFT)
+yScroll.grid(row = 2, column = 3, rowspan = 2)
+xScroll.grid(row = 4, column = 1, columnspan = 2)
 
-#fileFrame.pack(fill = tkinter.BOTH, expand = 1)
-#text.pack(side = tkinter.LEFT, fill = tkinter.BOTH, expand = 1)
-#xScroll.pack(side = tkinter.LEFT, fill = tkinter.Y)
-#yScroll.pack(side = tkinter.BOTTOM, fill = tkinter.X)
 mainWindow.mainloop()
