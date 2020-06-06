@@ -10,11 +10,11 @@ def OpenFile():
     global NAME
     NAME = fd.askopenfilename()
     try:
-        process = subprocess.check_output(["xxd", "-g1", str(NAME)])
+        process = subprocess.check_output(["xxd", "-g1", str(NAME)], stderr = subprocess.PIPE)
         text.delete(1.0, tkinter.END)
         text.insert(1.0, process)
-    except:
-        messagebox.showinfo("INFORMATION", "Something strange")
+    except Exception as er:
+        messagebox.showerror("Error", er)
 
 def SaveFile(name):
     try:
@@ -25,11 +25,23 @@ def SaveFile(name):
         process = subprocess.check_output(["xxd", "-r", "tmp"])
         file_2 = open(name, 'wb')
         file_2.write(process)
-    except:
-        messagebox.showerror("ERROR", "Something strange")
+    except Exception as er:
+        messagebox.showerror("Error", er)
 
 def SaveAsFile():
     SaveFile(fd.asksaveasfilename())
+
+def Undo():
+    try:
+        text.edit_undo()
+    except:
+        return
+
+def Redo():
+    try:
+        text.edit_redo()
+    except:
+        return
 
 
 mainWindow = tkinter.Tk()
@@ -62,10 +74,10 @@ text.grid(row = 2, column = 0, columnspan = 4, rowspan = 3)
 
 redoBtn = tkinter.Button(mainWindow, text = 'Redo', font = 'Arial 24', bd = 5)
 redoBtn.grid(row = 2, column = 4)
-redoBtn.bind('<Button>', lambda event: SaveAsFile())
+redoBtn.bind('<Button>', lambda event: Redo())
 
-undoAsdBtn = tkinter.Button(mainWindow, text = 'Undo', font = 'Arial 24', bd = 5)
+undoBtn = tkinter.Button(mainWindow, text = 'Undo', font = 'Arial 24', bd = 5)
 undoBtn.grid(row = 2, column = 5)
-undoBtn.bind('<Button>', lambda event: SaveAsFile())
+undoBtn.bind('<Button>', lambda event: Undo())
 
 mainWindow.mainloop()
