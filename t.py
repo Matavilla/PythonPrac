@@ -1,12 +1,13 @@
 import tkinter
 import os, subprocess
 from tkinter import messagebox
+from tkinter import filedialog as fd
 
 NAME = ""
 
 def OpenFile():
     global NAME
-    NAME = fileName.get()
+    NAME = fd.askopenfilename()
     try:
         process = subprocess.check_output(["xxd", "-g1", str(NAME)])
         text.delete(1.0, tkinter.END)
@@ -27,7 +28,7 @@ def SaveFile(name):
         messagebox.showerror("ERROR", "Something strange")
 
 def SaveAsFile():
-    SaveFile(fileName.get())
+    SaveFile(fd.asksaveasfilename())
 
 
 mainWindow = tkinter.Tk()
@@ -43,31 +44,24 @@ mainWindow.columnconfigure(3, weight = 1)
 mainWindow.rowconfigure(1, weight = 1)
 mainWindow.rowconfigure(5, weight = 1)
 
-#btnFrame = tkinter.Frame()
-#fileFrame = tkinter.Frame()
-
-fileName = tkinter.Entry(mainWindow, bd = 4, relief = tkinter.GROOVE)
-fileName.grid(row = 1, column = 1)
-
 openBtn = tkinter.Button(mainWindow, text = 'Open file', font = 'Arial 24', bd = 5)
-openBtn.grid(row = 1, column = 2)
+openBtn.grid(row = 1, column = 0)
 openBtn.bind('<Button>', lambda event: OpenFile())
 
 saveBtn = tkinter.Button(mainWindow, text = 'Save', font = 'Arial 24', bd = 5)
-saveBtn.grid(row = 1, column = 3)
+saveBtn.grid(row = 1, column = 1)
 saveBtn.bind('<Button>', lambda event: SaveFile(NAME))
 
 saveAsBtn = tkinter.Button(mainWindow, text = 'Save As', font = 'Arial 24', bd = 5)
-saveAsBtn.grid(row = 1, column = 4)
+saveAsBtn.grid(row = 1, column = 2)
 saveAsBtn.bind('<Button>', lambda event: SaveAsFile())
 
 text = tkinter.Text(bg='#FFFFE0')
-yScroll = tkinter.Scrollbar(mainWindow, command = text.yview)
+yScroll = tkinter.Scrollbar(command = text.yview)
 xScroll = tkinter.Scrollbar(orient = tkinter.HORIZONTAL, command = text.xview)
 text.configure(yscrollcommand = yScroll.set, xscrollcommand = xScroll.set)
-text.grid(row = 2, column = 1, columnspan = 2)
+text.grid(row = 2, column = 0, columnspan = 3, rowspan = 3)
 
-yScroll.grid(row = 2, column = 3, rowspan = 2)
-xScroll.grid(row = 4, column = 1, columnspan = 2)
-
+yScroll.grid(row = 3, column = 3)
+xScroll.grid(row = 5, column = 1)
 mainWindow.mainloop()
