@@ -15,7 +15,11 @@ def OpenFile():
         FIRST_OPEN = ""
     else:
         NAME = fd.askopenfilename()
-    process = subprocess.run(["xxd", "-g1", str(NAME)], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+    formG = "-g1"
+    tmp = gName.get()
+    if tmp:
+        formG = tmp
+    process = subprocess.run(["xxd", formG, str(NAME)], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
     if process.returncode:
         messagebox.showerror("Error", process.stderr)
     else:
@@ -48,7 +52,11 @@ def SaveAsFile():
     global NAME
     NAME = fd.asksaveasfilename()
     SaveFile(NAME)
-    mainWindow.title('Editor: ' + str(NAME))
+    if NAME:
+        mainWindow.title('Editor: ' + str(NAME))
+    else:
+        mainWindow.title('Editor')
+
 
 def Undo():
     try:
@@ -104,5 +112,10 @@ redoBtn.bind('<Button>', lambda event: Redo())
 undoBtn = tkinter.Button(mainWindow, text = 'Undo', font = 'Arial 24', bd = 5)
 undoBtn.grid(row = 2, column = 5)
 undoBtn.bind('<Button>', lambda event: Undo())
+
+gLabel = tkinter.Label(text="Формат представления:")
+gLabel.grid(row = 3, column = 4)
+gName = tkinter.Entry(mainWindow)
+gName.grid(row = 3, column = 5)
 
 mainWindow.mainloop()
