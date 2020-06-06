@@ -1,18 +1,25 @@
 import tkinter
-import os, subprocess
+import os, subprocess, sys
 from tkinter import messagebox
 from tkinter import filedialog as fd
 from tkinter.scrolledtext import ScrolledText
 
+FIRST_OPEN = ""
 NAME = ""
+SAVE_FILE = ""
 
 def OpenFile():
-    global NAME
-    NAME = fd.askopenfilename()
+    global NAME, FIRST_OPEN
+    if FIRST_OPEN:
+        NAME = FIRST_OPEN
+        FIRST_OPEN = ""
+    else:
+        NAME = fd.askopenfilename()
     process = subprocess.run(["xxd", "-g1", str(NAME)], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
     if process.returncode:
         messagebox.showerror("Error", process.stderr)
     else:
+        mainWindow.title('Editor: ' + str(NAME))
         text.delete(1.0, tkinter.END)
         text.insert(1.0, process.stdout)
 
@@ -28,9 +35,20 @@ def SaveFile(name):
     except Exception as err:
         messagebox.showerror("Error", err)
 
+def Save():
+    global SAVE_FILE, NAME
+    if SAVE_FILE:
+        SaveFile(SAVE_FILE)
+        SAVE_FILE = ""
+    else:
+        SaveFile(NAME)
+
 
 def SaveAsFile():
-    SaveFile(fd.asksaveasfilename())
+    global NAME
+    NAME = fd.asksaveasfilename()
+    SaveFile(NAME)
+    mainWindow.title('Editor: ' + str(NAME))
 
 def Undo():
     try:
@@ -50,6 +68,12 @@ mainWindow = tkinter.Tk()
 mainWindow.title('Editor')
 mainWindow.protocol("WM_DELETE_WINDOW", lambda: (_ for _ in ()).throw(SystemExit(0)))
 
+if len(sys.argv) == 2:
+    FIRST_OPEN = sys.argv[1]
+elif len(sys.argv) == 3:
+    FIRST_OPEN = sys.argv[1]
+    SAVE_FILE = sys.argv[2]
+
 w = mainWindow.winfo_screenwidth()
 h = mainWindow.winfo_screenheight()
 mainWindow.geometry(f'{w // 2}x{h // 2}+{w // 2 - w // 4}+{h // 2 - h // 4}')
@@ -64,7 +88,7 @@ openBtn.bind('<Button>', lambda event: OpenFile())
 
 saveBtn = tkinter.Button(mainWindow, text = 'Save', font = 'Arial 24', bd = 5)
 saveBtn.grid(row = 1, column = 2)
-saveBtn.bind('<Button>', lambda event: SaveFile(NAME))
+saveBtn.bind('<Button>', lambda event: Save())
 
 saveAsBtn = tkinter.Button(mainWindow, text = 'Save As', font = 'Arial 24', bd = 5)
 saveAsBtn.grid(row = 1, column = 3)
