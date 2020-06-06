@@ -57,7 +57,15 @@ saveAsBtn = tkinter.Button(mainWindow, text = 'Save As', font = 'Arial 24', bd =
 saveAsBtn.grid(row = 1, column = 3)
 saveAsBtn.bind('<Button>', lambda event: SaveAsFile())
 
-text = ScrolledText(bg='#FFFFE0')
+text = ScrolledText(bg='#FFFFE0', undo = True)
 text.grid(row = 2, column = 0, columnspan = 4, rowspan = 3)
+
+redoBtn = tkinter.Button(mainWindow, text = 'Redo', font = 'Arial 24', bd = 5)
+redoBtn.grid(row = 2, column = 4)
+redoBtn.bind('<Button>', lambda event: SaveAsFile())
+
+undoAsdBtn = tkinter.Button(mainWindow, text = 'Undo', font = 'Arial 24', bd = 5)
+undoBtn.grid(row = 2, column = 5)
+undoBtn.bind('<Button>', lambda event: SaveAsFile())
 
 mainWindow.mainloop()
